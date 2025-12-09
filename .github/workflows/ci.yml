@@ -1,0 +1,95 @@
+name: CI - Notification Service
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  ci:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Setup Go
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24.0"
+          cache: true
+
+      # Verify dependencies
+      - name: Verify dependencies
+        run: go mod verify
+
+      # Check if go.mod and go.sum are tidy
+      - name: Check go mod tidy
+        run: |
+          go mod tidy
+          git diff --exit-code go.mod go.sum || (echo "go.mod or go.sum are not tidy. Please run 'go mod tidy' and commit the changes." && exit 1)
+
+      # Check code formatting
+      - name: Check formatting
+        run: |
+          if [ -n "$(gofmt -l .)" ]; then
+            echo "The following files are not formatted correctly:"
+            gofmt -l .
+            echo "Please run 'go fmt ./...' to format your code."
+            exit 1
+          fi
+
+      # Run go vet for static analysis
+      - name: Run go vet
+        run: go vet ./...
+
+      # Install golangci-lint
+      - name: Install golangci-lint
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.64.5
+
+      # Run golangci-lint
+      - name: Run golangci-lint
+        run: $(go env GOPATH)/bin/golangci-lint run ./... --timeout=5m
+
+      # Download dependencies
+      - name: Download dependencies
+        run: go mod download
+
+      # Run tests with coverage
+      - name: Run tests
+        run: go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
+
+      # Display coverage
+      - name: Display coverage
+        run: go tool cover -func=coverage.out
+
+      # Upload coverage to artifacts
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.out
+          retention-days: 7
+
+      # Build the project
+      - name: Build project
+        run: go build -v -o notification-service ./
+
+      # Verify binary was created
+      - name: Verify binary
+        run: |
+          if [ ! -f ./notification-service ]; then
+            echo "Binary was not created successfully"
+            exit 1
+          fi
+          echo "Binary created successfully"
+          ls -lh ./notification-service
