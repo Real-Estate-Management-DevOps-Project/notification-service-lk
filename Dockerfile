@@ -16,5 +16,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags='-s -w' -o /notification-service 
 
 FROM scratch
 COPY --from=build /notification-service /notification-service
-EXPOSE 3004
+EXPOSE 3000
 ENTRYPOINT ["/notification-service"]

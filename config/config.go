@@ -24,7 +24,7 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		Port:       getEnv("PORT", "3004"),     // Different port from user-service
+		Port:       getEnv("PORT", "3000"),     // Different port from user-service
 		CORSOrigin: getEnv("CORS_ORIGIN", "*"), // Default to all for now
 		DBHost:     getEnv("DB_HOST", "localhost"),
 		DBUser:     getEnv("DB_USER", "postgres"),

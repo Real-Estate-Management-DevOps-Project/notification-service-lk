@@ -72,7 +72,7 @@ A dedicated microservice for handling system-wide notifications in the Real Esta
 4. Configure Environment:
    Create a `.env` file (or use defaults in `config/config.go`):
    ```env
-   PORT=3004
+   PORT=3000
    DB_HOST=localhost
    DB_USER=postgres
    DB_PASSWORD=your_password
@@ -92,7 +92,7 @@ make run
 
 ```bash
 make docker
-docker run -p 3004:3004 notification-service:local
+docker run -p 3000:3000 notification-service:local
 ```
 
 ## Example Requests
