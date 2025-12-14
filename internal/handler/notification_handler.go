@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"notification-service/internal/models"
 	"notification-service/internal/service"
 	"strconv"
@@ -25,14 +26,21 @@ func NewNotificationHandler(service service.NotificationService) *NotificationHa
 func (h *NotificationHandler) Send(c *fiber.Ctx) error {
 	var notification models.Notification
 	if err := c.BodyParser(&notification); err != nil {
+		log.Printf("Failed to parse notification request: %v", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
 	}
 
+	log.Printf("Received notification: recipient=%s, type=%s, subject=%s, content=%s", notification.Recipient, notification.Type, notification.Subject, notification.Content)
+
 	if err := h.validator.Struct(notification); err != nil {
+		log.Printf("Notification validation failed: %v", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
+	log.Printf("Received notification request: type=%s, recipient=%s, subject=%s", notification.Type, notification.Recipient, notification.Subject)
+
 	if err := h.service.SendNotification(&notification); err != nil {
+		log.Printf("Failed to queue notification: %v", err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to send notification"})
 	}
 
