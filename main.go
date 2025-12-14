@@ -35,9 +35,10 @@ func main() {
 	app.Use(recover.New())
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: cfg.CORSOrigin,
-		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
-		AllowHeaders: "Authorization,Content-Type",
+		AllowOrigins:     "http://localhost:5173, http://localhost:3000, https://realestate.nirmalsavinda.online",
+		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+		AllowHeaders:     "Authorization,Content-Type",
+		AllowCredentials: true,
 	}))
 
 	// Setup routes
