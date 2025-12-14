@@ -25,9 +25,7 @@ func SetupRoutes(app *fiber.App) {
 	})
 
 	api := app.Group("/api")
-	v1 := api.Group("/v1")
-
-	notifications := v1.Group("/notifications")
+	notifications := api.Group("/notifications")
 	notifications.Post("/send", h.Send)
 	notifications.Get("/history", h.GetHistory)
 	notifications.Get("/:id", h.GetByID)

@@ -27,15 +27,15 @@ A dedicated microservice for handling system-wide notifications in the Real Esta
 
 ### Sending
 
-- `POST /api/v1/notifications/send` - Queue a new notification
+- `POST /api/notifications/send` - Queue a new notification
   - Supports `EMAIL`, `SMS`, `PUSH` types.
   - Input: `recipient`, `type`, `subject`, `content`.
 
 ### History & Retrieval
 
-- `GET /api/v1/notifications/history` - Get global notification history (Paginated).
-- `GET /api/v1/notifications/:id` - Get details of a specific notification.
-- `GET /api/v1/notifications/user/:userId` - (Planned) Get notifications for a specific user.
+- `GET /api/notifications/history` - Get global notification history (Paginated).
+- `GET /api/notifications/:id` - Get details of a specific notification.
+- `GET /api/notifications/user/:userId` - (Planned) Get notifications for a specific user.
 
 ### Health
 
