@@ -24,8 +24,8 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		Port:       getEnv("PORT", "3000"),     // Different port from user-service
-		CORSOrigin: getEnv("CORS_ORIGIN", "*"), // Default to all for now
+		Port:       getEnv("PORT", "3000"),                                                                                         // Different port from user-service
+		CORSOrigin: getEnv("CORS_ORIGIN", "http://localhost:5173, http://localhost:3000, https://realestate.nirmalsavinda.online"), // Default to all for now
 		DBHost:     getEnv("DB_HOST", "localhost"),
 		DBUser:     getEnv("DB_USER", "postgres"),
 		DBPassword: getEnv("DB_PASSWORD", ""),
